@@ -1,6 +1,6 @@
-# dark_emulator2
+# Dark Emulator2
 
-Matter power spectrum emulator in the non-flat $\nu w_0 w_a \mathrm{CDM}$ cosmology model.
+Neural-network emulator for the matter power spectrum in the non-flat $\nu w_0 w_a o \mathrm{CDM}$ cosmology model, developed as part of the [Dark Quest project](https://darkquestcosmology.github.io/).
 
 ## Installation
 
@@ -24,14 +24,6 @@ cd dark_emulator2_public
 pip install .
 ```
 
-- When building `classy` as a dependency, you may encounter an error indicating that `cython` is required. Since this dependency cannot be resolved by this package itself, please install them manually beforehand:
-
-```console
-pip install cython
-pip install classy
-```
-
-
 ## Usage
 
 ```python
@@ -44,12 +36,14 @@ k, pk = de.get_pk(param, zred=0.0)
 
 ## Examples
 
-Example notebooks are available in [DarkQuestCosmology/dark_emulator2_public](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook).
+Example notebooks are available in [notebook](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook).
 
-## Reference
+## Links
 
-- matter power spectrum emulator
-- Ginkaku code
+- dark_emulator2 paper: arxiv.xxx
+- GINKAKU code paper: arxiv.xxx
+- Dark Quest project: [darkquestcosmology.github.io](https://darkquestcosmology.github.io/)
+- Previous Dark Emulator release: [DarkQuestCosmology/dark_emulator_public](https://github.com/DarkQuestCosmology/dark_emulator_public)
 
 ## License
 

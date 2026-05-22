@@ -11,3 +11,5 @@ docs/generated/
 docs/_source/
 docs/_static/
 docs/_templates/
+
+_LOCAL_PUBLIC_RELEASE_STEPS.md
