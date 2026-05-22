@@ -10,9 +10,17 @@ From PyPI:
 pip install dark_emulator2
 ```
 
+From GitHub:
+
+```console
+pip install "git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git"
+```
+
 From source:
 
 ```console
+git clone https://github.com/DarkQuestCosmology/dark_emulator2_public.git
+cd dark_emulator2_public
 pip install .
 ```
 

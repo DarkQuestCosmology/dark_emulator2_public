@@ -16,9 +16,13 @@ The ``dark_emulator2`` Python package provides fast and accurate predictions of 
 
 For the previous public release based on Dark Quest I (DQ1), see the Dark Emulator `documentation <https://dark-emulator.readthedocs.io/>`_ and the `GitHub repository <https://github.com/DarkQuestCosmology/dark_emulator_public/>`_.
 
-In order to install dark_emulator2 package, use pip::
+Install from PyPI::
 
 	pip install dark_emulator2
+
+Install directly from GitHub::
+
+	pip install "git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git"
 
 For source or development installation::
 
