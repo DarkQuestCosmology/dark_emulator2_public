@@ -1,0 +1,32 @@
+- 2025/05
+develop/fix_mix_pk.pth
+torch_learning/one_cv_public/fix/learn/pytorch/power/Lamb/ELU/RMSE/StepLR/param9d_linear_power/torch_n1072/n1072_ep5000_btc50_hid2_nh2000_cv0.pth
+develop/rand_mix_pk.pth
+torch_learning/one_cv_public/random/learn/pytorch/power/Lamb/ELU/RMSE/StepLR/param9d_linear_power_GRF_delta/torch_n2244/n2244_ep5000_btc50_hid2_nh2000_cv0.pth
+
+release/fix_mix_pk.pth
+torch_learning/one_cv_public/public/learn_fix/pytorch/power/Lamb/ELU/RMSE/StepLR/param9d_linear_power/torch_n1114/fix_seed_4.pth
+release/rand_mix_pk.pth
+torch_learning/one_cv_public/public/learn/pytorch/power/Lamb/ELU/RMSE/StepLR/param9d_linear_power_GRF_delta/torch_n2706/rand_seed_1.pth
+
+
+- 2023/11
+develop/rand_mix_pk.pth
+power/Lamb/GELU/RMSE/netpt0/param9d_linear_power_param9d_linear_power_GRF_delta/torch_n2244/n2244_ep10000_btc100_hid1_nh2000_cv20_rep20.pth
+
+develop/fix_mixonly_pk.pth
+power/Lamb/GELU/RMSE/netpt0/param9d_linear_power/torch_n50/n50_ep10000_btc100_hid2_nh2000_cv20_rep20.pth
+
+- 2023/10
+develop/rand_mix_pk_nohigh.pth
+power/Lamb/GELU/RMSE/netpt0/param9d_linear_power_param9d_linear_power_GRF_delta/torch_n2223/n2223_ep10000_btc100_hid1_nh2000_cv20_rep20.pth
+
+develop/fix_mix_pk.pth
+power/Lamb/GELU/RMSE/netpt0/param9d_linear_power/torch_n1072/n1072_ep10000_btc100_hid2_nh2000_cv20_rep20.pth
+
+develop/fix_mix_pk_p9.pth
+power/Lamb/GELU/RMSE/netpt0/param9d/torch_n1072/n1072_ep10000_btc100_hid2_nh2000_cv20_rep20.pth
+
+- 2023/07
+develop/fix_mix_pk.pth
+power/Lamb/GELU/RMSE/netpt0/param9d_linear_power/torch_n1051/n1051_ep3000_btc100_hid2_nh2000_cv10_rep10.pth

@@ -1,0 +1,19 @@
+
+- 2023/09/29
+lin_pk_cb.pth
+lin_pk/Lamb/GELU/RMSE/torch_n49000/n49000_ep10000_btc100_hid4_nh400_cv20_rep20.pth
+
+- 2023/09/20
+delete lin_pk_tot.pth
+lin_pk_ratio.pth
+ratio/Lamb/GELU/RMSE/torch_n49000/n49000_ep10000_btc100_hid2_nh400_cv20_rep20.pth
+
+- 2023/09
+lin_pk_cb.pth
+lin_pk/Lamb/GELU/RMSE/torch_n49000/n49000_ep5000_btc100_hid6_nh600_cv20_rep20.pth
+lin_pk_tot.pth
+lin_pk/Lamb/GELU/RMSE/torch_n49000/n49000_ep10000_btc100_hid6_nh800_cv20_rep20.pth
+
+- 2023/07
+lin_pk_cb.pth
+lin_pk/FusedLAMB/GELU/RMSE/torch_n49000/n49000_ep10000_btc100_hid6_nh800_cv20_rep20.pth

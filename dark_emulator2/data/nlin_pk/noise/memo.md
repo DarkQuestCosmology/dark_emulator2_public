@@ -1,0 +1,4 @@
+- nsupport=150
+- 1 Gpc/h box : k[0:nsupport]
+- 2 Gpc/h box : k[3:nsupport+3]
+- 4 Gpc/h box : k[6:nsupport+6]

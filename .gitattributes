@@ -1,0 +1,9 @@
+dark_emulator2/data/torch/nlin_pk/develop export-ignore
+dark_emulator2/data/nlin_pk/noise/develop export-ignore
+test export-ignore
+figure export-ignore
+
+dark_emulator2/data/torch/nlin_pk/memo.txt export-ignore
+dark_emulator2/data/torch/amp/memo.txt export-ignore
+dark_emulator2/data/torch/lin_pk/memo.txt export-ignore
+dark_emulator2/data/nlin_pk/noise/memo.md export-ignore

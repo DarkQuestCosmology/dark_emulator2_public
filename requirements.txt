@@ -1,0 +1,6 @@
+numpy
+scipy >= 1.10
+torch
+frozendict
+classy >= 3.0
+packaging

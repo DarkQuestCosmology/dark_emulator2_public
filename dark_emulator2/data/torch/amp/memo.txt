@@ -1,0 +1,4 @@
+
+- 2023/07
+amp.pth
+amp/FusedLAMB/GELU/RMSE/torch_n49000/n49000_ep10000_btc100_hid6_nh1000_cv20_rep20.pth

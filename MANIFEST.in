@@ -1,0 +1,22 @@
+include LICENSE
+include CHANGELOG.md
+include README.md
+
+include dark_emulator2/data/lin_pk/parameter_lists.txt
+recursive-include dark_emulator2/data/lin_pk/fiducial *.dat
+
+include dark_emulator2/data/nlin_pk/parameter_lists.txt
+recursive-include dark_emulator2/data/nlin_pk/fiducial *.dat
+include dark_emulator2/data/nlin_pk/noise/*.dat
+recursive-include dark_emulator2/data/nlin_pk/noise/release *.dat
+
+include dark_emulator2/data/torch/amp/amp.pth
+recursive-include dark_emulator2/data/torch/lin_pk *.pth
+recursive-include dark_emulator2/data/torch/nlin_pk/release *.pth
+
+### for debug ###
+#recursive-include dark_emulator2/data/nlin_pk/noise/develop *.dat
+#recursive-include dark_emulator2/data/torch/nlin_pk/develop *.pth
+
+prune build
+prune dist

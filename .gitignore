@@ -1,0 +1,14 @@
+test/
+*.pickle
+.ipynb_checkpoints
+
+build/
+dist/
+*.egg-info/
+
+docs/_build/
+docs/generated/
+docs/_source/
+docs/_static/
+docs/_templates/
+

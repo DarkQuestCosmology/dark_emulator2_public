@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "dark_emulator2"
+version = "1.0.0"
+authors = [
+  { name = "Satoshi Tanaka" },
+  { name = "Takahiro Nishimichi" },
+  { name = "Yosuke Kobayashi" },
+]
+description = "Matter power spectrum emulator in the non-flat nu w0 wa CDM cosmology model."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Scientific/Engineering :: Astronomy",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+  "numpy",
+  "scipy>=1.10",
+  "torch",
+  "frozendict",
+  "classy>=3.0",
+  "packaging",
+]
+
+[tool.setuptools.packages.find]
+include = ["dark_emulator2*"]
+
+
+[tool.setuptools.package-data]
+dark_emulator2 = [
+  "data/lin_pk/parameter_lists.txt",
+  "data/lin_pk/fiducial/*.dat",
+
+  "data/nlin_pk/parameter_lists.txt",
+  "data/nlin_pk/fiducial/*.dat",
+  "data/nlin_pk/noise/*.dat",
+  "data/nlin_pk/noise/release/*.dat",
+
+  "data/torch/amp/amp.pth",
+  "data/torch/lin_pk/*.pth",
+  "data/torch/nlin_pk/release/*.pth",
+
+  #data/nlin_pk/noise/develop/*.dat,
+  #data/torch/nlin_pk/develop/*.pth,
+]
