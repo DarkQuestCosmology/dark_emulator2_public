@@ -1,5 +1,4 @@
 test/
-develop/
 *.pickle
 .ipynb_checkpoints
 

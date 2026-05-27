@@ -12,15 +12,22 @@ authors = [
   { name = "Yosuke Kobayashi" },
 ]
 description = "Matter power spectrum emulator in the non-flat nu w0 wa CDM cosmology model."
+keywords = [
+  "cosmology",
+  "dark energy",
+  "dark matter",
+  "large-scale structure",
+  "matter power spectrum",
+  "emulator",
+]
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
+  "Programming Language :: Python :: 3",
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
   "Topic :: Scientific/Engineering :: Astronomy",
   "Topic :: Scientific/Engineering :: Physics",
 ]
