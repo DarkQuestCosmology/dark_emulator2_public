@@ -13,7 +13,7 @@ pip install dark_emulator2
 From GitHub:
 
 ```console
-pip install "git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git"
+pip install git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git
 ```
 
 From source:
@@ -42,8 +42,12 @@ Example notebooks are available in [notebook](https://github.com/DarkQuestCosmol
 
 - dark_emulator2 paper: arxiv.xxx
 - GINKAKU code paper: arxiv.xxx
+
 - Dark Quest project: [darkquestcosmology.github.io](https://darkquestcosmology.github.io/)
 - Previous Dark Emulator release: [DarkQuestCosmology/dark_emulator_public](https://github.com/DarkQuestCosmology/dark_emulator_public)
+
+- Supplementary emulator comparisons: https://darkquestcosmology.github.io/dark_emulator2_supplement/
+
 
 ## License
 

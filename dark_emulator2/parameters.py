@@ -552,23 +552,50 @@ class Parameters:
         p = ut.sarray_to_dict(p)
         return p
 
-    def get_dq2_om_sig8_plane(self):
+    def __de2_om_sig8_support_params(self):
         Om_range = [0.1, 0.6]
-        sig8_range = [0.42, 1.25]
+        sig8_max = 1.25
         S8_range = [0.6, 0.95]
         Om_cent = 0.3156
         sig8_cent = 0.831
-        S8_cent = sig8_cent * np.sqrt(0.3156 / 0.3)
+        S8_cent = sig8_cent * np.sqrt(Om_cent / 0.3)
         S8_cent *= 0.91
         Om_r = np.fmax(Om_range[1] - Om_cent, Om_cent - Om_range[0])
         S8_r = np.fmax(S8_range[1] - S8_cent, S8_cent - S8_range[0])
+        return Om_cent, Om_r, S8_cent, S8_r, sig8_max
+
+    def get_de2_om_sig8_plane(self):
+        Om_cent, Om_r, S8_cent, S8_r, sig8_max = self.__de2_om_sig8_support_params()
         theta = np.linspace(0, 2 * np.pi, 256)
         x = Om_r * np.cos(theta) + Om_cent
         y = S8_r * np.sin(theta) + S8_cent
         y2 = y / (x / 0.3)**0.5
-        dq2_range_x = x[y2 < sig8_range[1] * 1.01]
-        dq2_range_y = y2[y2 < sig8_range[1] * 1.01]
-        return dq2_range_x, dq2_range_y
+        de2_range_x = x[y2 < sig8_max * 1.01]
+        de2_range_y = y2[y2 < sig8_max * 1.01]
+        return de2_range_x, de2_range_y
+
+    def _is_in_Om_sig8_support(self, param):
+        """
+        Check the approximate DE2 support in the Omega_m-sigma8 plane.
+
+        This uses the same projected support definition as
+        ``get_de2_om_sig8_plane()``. It only checks the projected banana
+        with the high-sigma8 clip, not the full 9D parameter consistency.
+        """
+        Om = param["Omega_m"]
+
+        if self.def_key_val(param, "sigma8"):
+            sig8 = param["sigma8"]
+            S8 = sig8 * np.sqrt(Om / 0.3)
+        elif self.def_key_val(param, "S8"):
+            S8 = param["S8"]
+            sig8 = S8 / np.sqrt(Om / 0.3)
+        else:
+            raise KeyError("param must contain 'Omega_m' and either 'sigma8' or 'S8'")
+
+        Om_cent, Om_r, S8_cent, S8_r, sig8_max = self.__de2_om_sig8_support_params()
+        ellipse = (Om - Om_cent)**2 / Om_r**2 + (S8 - S8_cent)**2 / S8_r**2
+        return bool((ellipse <= 1.0) and (sig8 <= sig8_max * 1.01))
 
     def clear_sigma8(self, param):
         """

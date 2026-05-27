@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 - 2026-05-27
+
+- Add DE2 support-check helpers: `DarkEmulator2.is_in_support()` and `Parameters.get_de2_om_sig8_plane()`.
+- Update public example notebooks with DE2 support examples.
+
 ## 1.0.0 - 2026-05-22
 
 - Use `pyproject.toml` as the single source of truth for the package version.

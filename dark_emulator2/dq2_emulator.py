@@ -162,6 +162,39 @@ class DarkEmulator2:
         param["sigma8"] = sig8
         return sig8
 
+    def is_in_support(self, param, method="emulator"):
+        """
+        Check whether a cosmological parameter dictionary is inside the
+        practical DE2 support.
+
+        This first completes and range-checks the parameter dictionary with
+        ``set_param()``. If ``sigma8`` is not supplied, it is computed from
+        ``As`` or ``ln(10^10As)``. The final support check uses the projected
+        Omega_m-sigma8 banana support, not a full 9D boundary.
+        """
+        p = dict(param)
+
+        if self.param.def_key_val(p, "sigma8"):
+            self.param.clear_As(p)
+            self.param.clear_lnAs(p)
+        elif self.param.def_key_val(p, "S8") and self.param.def_key_val(p, "Omega_m"):
+            p["sigma8"] = p["S8"] / np.sqrt(p["Omega_m"] / 0.3)
+            self.param.clear_As(p)
+            self.param.clear_lnAs(p)
+
+        if self.param.check_key_val_num(p, ["Omega_m", "h0", "omega_b", "omega_cdm"]) > 3:
+            self.param.clear_omega_cdm(p)
+        if self.param.check_key_val_num(p, ["Omega_k", "Omega_de"]) > 1:
+            self.param.clear_Omega_de(p)
+
+        try:
+            p = self.param.set_param(p, strict=True)
+            if not self.param.def_key_val(p, "sigma8"):
+                self.get_sigma8(p, method=method)
+            return self.param._is_in_Om_sig8_support(p)
+        except (AssertionError, KeyError, ValueError):
+            return False
+
     def get_As(self, param):
         """
         Compute primordial amplitude As from sigma8.

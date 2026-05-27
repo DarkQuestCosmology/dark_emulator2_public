@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dark_emulator2"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name = "Satoshi Tanaka" },
   { name = "Takahiro Nishimichi" },
@@ -39,6 +39,10 @@ dependencies = [
   "classy>=3.0",
   "packaging",
 ]
+
+[project.urls]
+Project = "https://darkquestcosmology.github.io/"
+Source = "https://github.com/DarkQuestCosmology/dark_emulator2_public"
 
 [tool.setuptools.packages.find]
 include = ["dark_emulator2*"]
