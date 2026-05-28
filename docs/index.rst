@@ -1,14 +1,5 @@
-.. DarkEmulator2 documentation master file, created by
-   sphinx-quickstart on Mon Jan  5 10:32:08 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Dark Emulator2 documentation
 ============================
-
-.. Add your content using ``reStructuredText`` syntax. See the
-   `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-   documentation for details.
 
 DarkEmulator2 is a cosmology code for rapid evaluation of large-scale-structure summary statistics developed within the Dark Quest Project (https://darkquestcosmology.github.io/).
 
@@ -22,7 +13,7 @@ Install from PyPI::
 
 Install directly from GitHub::
 
-	pip install "git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git"
+	pip install git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git
 
 For source or development installation::
 

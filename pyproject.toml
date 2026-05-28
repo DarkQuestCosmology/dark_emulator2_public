@@ -42,6 +42,7 @@ dependencies = [
 
 [project.urls]
 Project = "https://darkquestcosmology.github.io/"
+Documentation = "https://dark-emulator2.readthedocs.io/"
 Source = "https://github.com/DarkQuestCosmology/dark_emulator2_public"
 
 [tool.setuptools.packages.find]
