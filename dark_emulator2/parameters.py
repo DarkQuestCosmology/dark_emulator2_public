@@ -685,16 +685,36 @@ class Parameters:
         Accepted preset names are:
 
         - ``preset_de2``: DQ2 native emulator range
-        - ``preset_ee2``: EuclidEmulator2 <https://arxiv.org/abs/2010.11288>
-        - ``preset_bacco``: BACCOemu <https://arxiv.org/abs/2011.15018>
-        - ``preset_aemulus``: Aemulus nonlinear emulator <https://arxiv.org/abs/2303.09762>
-        - ``preset_mtu``: MTU emulator <https://arxiv.org/abs/2207.12345>
-        - ``preset_goku``: GOKU-W <https://arxiv.org/abs/2501.06296>
-        - ``preset_csstemu``: CSSTemu <https://github.com/czymh/csstemu>
-        - ``preset_aletheia``: <https://arxiv.org/abs/2511.13826>
-        - ``preset_franken``: FrankenEmu <https://arxiv.org/abs/0912.4490>
-        - ``preset_pkann``: PKANN <https://arxiv.org/abs/1312.2101>
+          (`code <https://github.com/DarkQuestCosmology/dark_emulator2_public>`__)
+        - ``preset_ee2``: EuclidEmulator2
+          (`arXiv:2010.11288 <https://arxiv.org/abs/2010.11288>`__;
+          `code <https://github.com/miknab/EuclidEmulator2>`__)
+        - ``preset_bacco``: BACCOemu
+          (`arXiv:2011.15018 <https://arxiv.org/abs/2011.15018>`__;
+          `code <https://bitbucket.org/rangulo/baccoemu>`__)
+        - ``preset_aemulus``: Aemulus nonlinear emulator
+          (`arXiv:2303.09762 <https://arxiv.org/abs/2303.09762>`__;
+          `code <https://github.com/AemulusProject/aemulus_heft>`__)
+        - ``preset_mtu``: MTU emulator
+          (`arXiv:2207.12345 <https://arxiv.org/abs/2207.12345>`__;
+          `code <https://github.com/lanl/CosmicEmu>`__)
+        - ``preset_goku``: GOKU-W
+          (`arXiv:2501.06296 <https://arxiv.org/abs/2501.06296>`__;
+          `code <https://github.com/astro-YYH/GokuEmu>`__)
+        - ``preset_csstemu``: CSSTemu
+          (`arXiv:2502.11160 <https://arxiv.org/abs/2502.11160>`__;
+          `code <https://github.com/czymh/csstemu>`__)
+        - ``preset_aletheia``: Aletheia
+          (`arXiv:2511.13826 <https://arxiv.org/abs/2511.13826>`__;
+          `code <https://gitlab.mpcdf.mpg.de/arielsan/aletheia>`__)
+        - ``preset_franken``: FrankenEmu
+          (`arXiv:0912.4490 <https://arxiv.org/abs/0912.4490>`__;
+          `documentation <https://cosmosis.readthedocs.io/en/latest/reference/standard_library/FrankenEmu.html>`__)
+        - ``preset_pkann``: PKANN
+          (`arXiv:1312.2101 <https://arxiv.org/abs/1312.2101>`__;
+          `code <http://zuserver2.star.ucl.ac.uk/~fba/PkANN>`__)
         - ``preset_hmcode``: HMcode (uses MTU-like box)
+          (`code <https://github.com/alexander-mead/HMcode>`__)
 
         Returns
         -------
