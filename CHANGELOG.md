@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 - 2026-09-24
+
+- Fix `comoving_distance()` to account for CPL dark energy evolution (`w0`, `wa`), while retaining ΛCDM defaults when those parameters are absent.
+
 ## 1.0.1 - 2026-05-27
 
 - Add DE2 support-check helpers: `DarkEmulator2.is_in_support()` and `Parameters.get_de2_om_sig8_plane()`.

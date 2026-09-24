@@ -13,7 +13,8 @@ def comoving_distance(z, p):
     z : float or ndarray
         Redshift(s).
     p : dict
-        Cosmological parameters with keys "h0", "Omega_m", "Omega_de", "Omega_k".
+        Cosmological parameters with keys "h0", "Omega_m", "Omega_de", "Omega_k",
+        and optional "w0", "wa" (defaulting to -1 and 0).
 
     Returns
     -------
@@ -22,11 +23,14 @@ def comoving_distance(z, p):
     """
 
     H0, Om, Ode, Ok = 100 * p["h0"], p["Omega_m"], p["Omega_de"], p["Omega_k"]
+    w0, wa = p.get("w0", -1.0), p.get("wa", 0.0)
 
     # H0 [km/s/Mpc]
     Dh = const.cspeed / H0  # Hubble-Distance [Mpc/h]
 
-    def inv_E(z): return 1.0 / (np.sqrt(Om * (1 + z)**3 + Ok * (1 + z)**2 + Ode))
+    def inv_E(z):
+        Fde = (1 + z)**(3 * (1 + w0 + wa)) * np.exp(-3 * wa * z / (1 + z))
+        return 1.0 / np.sqrt(Om * (1 + z)**3 + Ok * (1 + z)**2 + Ode * Fde)
 
     if np.isscalar(z):
         integral = quad(inv_E, 0, z)[0]
