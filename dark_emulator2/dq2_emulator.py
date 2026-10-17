@@ -131,6 +131,13 @@ class DarkEmulator2:
                 order = np.argsort(sort_idx)
         return zred, scalar_input, order
 
+    @staticmethod
+    def __taper_shallow_tail(k, pk):
+        # FFTLog extends k^3 P(k) as a power law over many decades and diverges for a tail
+        # shallower than about k^-2, so damp k >~ 300 h/Mpc only in that case.
+        slope = np.log(pk[..., -1] / pk[..., -2]) / np.log(k[-1] / k[-2])
+        return np.where(slope[..., np.newaxis] > -2.2, pk * np.exp(-(k / 300.0)**2), pk)
+
     ### for amplitude parameter ###
 
     def get_sigma8(self, param, method="emulator"):
@@ -484,6 +491,7 @@ class DarkEmulator2:
             k, lin_pk = self.get_lin_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
         finally:
             self.reduce_shotnoise = rshot_flag
+        lin_pk = self.__taper_shallow_tail(k, lin_pk)
         if lin_pk.ndim > 1:
             xi = [[] for _ in range(len(lin_pk))]
             for i in range(len(lin_pk)):
@@ -529,6 +537,7 @@ class DarkEmulator2:
             k, pk = self.get_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
         finally:
             self.reduce_shotnoise = rshot_flag
+        pk = self.__taper_shallow_tail(k, pk)
         if pk.ndim > 1:
             xi = [[] for _ in range(len(pk))]
             for i in range(len(pk)):

@@ -90,7 +90,8 @@ def tophat_nsz(zlist, zmin=0.9, zmax=1.1, normalize=True):
         Redshift distribution evaluated at zlist.
     """
 
-    nsz = np.where((zlist >= zmin) & (zlist <= zmax), 1.0, 0.0)
+    # tolerate round-off in zlist (e.g. linspace(0, 3, 151)[35] = 0.7000000000000001)
+    nsz = np.where((zlist >= zmin - 1e-10) & (zlist <= zmax + 1e-10), 1.0, 0.0)
     if normalize:
         nsz /= simpson(nsz, x=zlist)
     return nsz

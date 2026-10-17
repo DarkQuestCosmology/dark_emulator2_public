@@ -144,7 +144,7 @@ class fftlog(object):
 
 class hankel(object):
     def __init__(self, x, fx, nu, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, N_pad=0, xy=1):
-        self.myfftlog = fftlog(x, np.sqrt(x) * fx, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, xy=1)
+        self.myfftlog = fftlog(x, np.sqrt(x) * fx, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, xy=xy)
 
     def hankel(self, n):
         y, Fy = self.myfftlog.fftlog(n - 0.5)
@@ -265,7 +265,7 @@ def g_l_smooth(l, z_array, binwidth_dlny, alpha_pow):
 
 
 def pk2wp(k, pk, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, N_pad=0, kr=1, dlnrp=0.0, D=2):
-    myhankel = hankel(k, pk * k**2, nu, N_extrap_low, N_extrap_high, N_pad, kr)
+    myhankel = hankel(k, pk * k**2, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, kr)
     if dlnrp == 0.0:
         rp, wp = myhankel.hankel(0)
     else:
@@ -275,7 +275,7 @@ def pk2wp(k, pk, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, 
 
 
 def pk2dwp(k, pk, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, N_pad=0, kr=1, dlnrp=0.0, D=2):
-    myhankel = hankel(k, pk * k**2, nu, N_extrap_low, N_extrap_high, N_pad, kr)
+    myhankel = hankel(k, pk * k**2, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, kr)
     if dlnrp == 0.0:
         rp, dwp = myhankel.hankel(2)
     else:
@@ -285,14 +285,14 @@ def pk2dwp(k, pk, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25,
 
 
 def pk2xi(k, pk, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, N_pad=0, kr=1, l=0):
-    myfftlog = fftlog(k, pk * k**3, nu, N_extrap_low, N_extrap_high, N_pad, kr)
+    myfftlog = fftlog(k, pk * k**3, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, kr)
     r, xi = myfftlog.fftlog(l)
     xi /= 2 * np.pi**2
     return r, xi
 
 
 def xi2pk(r, xi, nu=1.01, N_extrap_low=0, N_extrap_high=0, c_window_width=0.25, N_pad=0, kr=1):
-    myfftlog = fftlog(r, xi * r**3, nu, N_extrap_low, N_extrap_high, N_pad, kr)
+    myfftlog = fftlog(r, xi * r**3, nu, N_extrap_low, N_extrap_high, c_window_width, N_pad, kr)
     k, pk = myfftlog.fftlog(0)
     pk *= 4.0 * np.pi
     return k, pk

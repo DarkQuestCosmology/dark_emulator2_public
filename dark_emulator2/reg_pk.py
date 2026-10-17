@@ -182,7 +182,7 @@ class PkEmulator():
             fixed_model_noise = torch.tensor(self.input_grf_noise_file(self.grf_filename)[1], dtype=torch.float32)
             self.dataset["grf_del_pk"][0] = fixed_model_noise
             _dataset = [self.dataset[ikey] for ikey in self.datakey]
-            if dataset == None: dataset = _dataset
+            if dataset == None: dataset = [d.clone() for d in _dataset]
             else: dataset = [torch.cat([dataset[i], _dataset[i]]) for i in range(len(dataset))]
 
             for ir in range(1, self.nrand):
@@ -333,7 +333,7 @@ class PkEmulator():
             scalar_input = True
 
         support_kmax = np.where(k < 100)[0][-1]  # First point to hit from the right
-        support_kmin = np.where(k > 1e-3)[0][0]  # First point to hit from the left
+        support_kmin = np.where(k >= 1e-3)[0][0]  # First point to hit from the left
 
         k_order = 1
         min_cutoff_k = 0.8 * kny
@@ -345,9 +345,9 @@ class PkEmulator():
         for idpk in range(len(dpk)):
             cutoff_logk_idx = np.where(dpk[idpk][ign_k_len:] >= cutoff_grad)[0]
             if len(cutoff_logk_idx) > 0: cutoff_idx = ign_k_len + cutoff_logk_idx[0]
-            else: cutoff_idx = support_kmax
+            else: cutoff_idx = support_kmax + 1
 
-            if k[cutoff_idx] > 100: cutoff_idx = support_kmax
+            if cutoff_idx > support_kmax: cutoff_idx = support_kmax + 1
 
             #  print(cutoff_idx, k[cutoff_idx])
 
@@ -366,7 +366,7 @@ class PkEmulator():
             scalar_input = True
 
         support_kmax = np.where(k < 100)[0][-1]  # First point to hit from the right
-        support_kmin = np.where(k > 1e-3)[0][0]  # First point to hit from the left
+        support_kmin = np.where(k >= 1e-3)[0][0]  # First point to hit from the left
 
         k_order = 1
         logk = np.log10(k)
@@ -376,9 +376,9 @@ class PkEmulator():
         for ilogpk in logpk:
             cutoff_idx = np.where(ilogpk < cutoff_pk)[0]  # First point to hit from the left
             if len(cutoff_idx) > 0: cutoff_idx = cutoff_idx[0]
-            else: cutoff_idx = support_kmax
+            else: cutoff_idx = support_kmax + 1
 
-            if k[cutoff_idx] > 100: cutoff_idx = support_kmax
+            if cutoff_idx > support_kmax: cutoff_idx = support_kmax + 1
 
             #  print(cutoff_idx, k[cutoff_idx])
 
@@ -406,7 +406,7 @@ class PkEmulator():
 
         kmin, kmax = min(orig_k), max(orig_k)
         support_kmax = np.where(extrap_k < kmax)[0][-1]  # First point to hit from the right
-        support_kmin = np.where(extrap_k > kmin)[0][0]  # First point to hit from the left
+        support_kmin = np.where(extrap_k >= kmin)[0][0]  # First point to hit from the left
 
         k_order = 1
         logk = np.log10(extrap_k)
@@ -416,9 +416,9 @@ class PkEmulator():
         for ilogpk in logpk:
             cutoff_idx = np.where(ilogpk < cutoff_pk)[0]  # First point to hit from the left
             if len(cutoff_idx) > 0: cutoff_idx = cutoff_idx[0]
-            else: cutoff_idx = support_kmax
+            else: cutoff_idx = support_kmax + 1
 
-            if extrap_k[cutoff_idx] > kmax: cutoff_idx = support_kmax
+            if cutoff_idx > support_kmax: cutoff_idx = support_kmax + 1
 
             pk_tmp = ius(logk[support_kmin:cutoff_idx], ilogpk[support_kmin:cutoff_idx], k=k_order)(logk)
             pk_extrap.append(10.0**pk_tmp)

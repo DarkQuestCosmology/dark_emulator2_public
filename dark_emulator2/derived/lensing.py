@@ -13,8 +13,8 @@ def comoving_distance(z, p):
     z : float or ndarray
         Redshift(s).
     p : dict
-        Cosmological parameters with keys "h0", "Omega_m", "Omega_de", "Omega_k",
-        and optional "w0", "wa" (defaulting to -1 and 0).
+        Cosmological parameters with keys "h0", "Omega_m", "Omega_k"
+        (Omega_de = 1 - Omega_m - Omega_k), and optional "w0", "wa" (defaulting to -1 and 0).
 
     Returns
     -------
@@ -22,7 +22,8 @@ def comoving_distance(z, p):
         Comoving distance [Mpc].
     """
 
-    H0, Om, Ode, Ok = 100 * p["h0"], p["Omega_m"], p["Omega_de"], p["Omega_k"]
+    H0, Om, Ok = 100 * p["h0"], p["Omega_m"], p["Omega_k"]
+    Ode = 1.0 - Om - Ok
     w0, wa = p.get("w0", -1.0), p.get("wa", 0.0)
 
     # H0 [km/s/Mpc]
@@ -147,7 +148,7 @@ def weight_function(zs, z, p):
 
     H0, Om = 100 * p["h0"], p["Omega_m"]
     norm = (3.0 * Om / 2.0) * (H0 / const.cspeed)**2.0
-    kernel = (1.0 + z) * (proper_distance(zs, p) - proper_distance(z, p)) * proper_distance(z, p) / proper_distance(zs, p)
+    kernel = (1.0 + z) * proper_distance_x(comoving_distance(zs, p) - comoving_distance(z, p), p) * proper_distance(z, p) / proper_distance(zs, p)
     Wx = norm * kernel
     return Wx
 
@@ -237,8 +238,9 @@ def lensing_kernel(zs, nsz, ns_zlist, p):
 
     chi = comoving_distance(zs, p)
     chi_s = comoving_distance(ns_zlist, p)
-    Wx_integrand = lensing_kernel_x(chi_s, chi, zs, p) * nsz
-    Wx = simpson(Wx_integrand, x=chi_s)
+    # sources in front of the lens do not contribute
+    Wx_integrand = lensing_kernel_x(np.maximum(chi_s, chi), chi, zs, p) * nsz
+    Wx = simpson(Wx_integrand, x=ns_zlist)
     return Wx
 
 
@@ -356,10 +358,12 @@ def pk2cl_limber_src_dist(p, pk, klist, zlist, llist, nsz=None, modified=True):
     chi = comoving_distance(zlist, p)  # [Mpc]
     fKchi = proper_distance(zlist, p)  # [Mpc]
 
+    # same Simpson weights as the n(z) normalization for every lens plane
+    w = simpson(np.eye(len(zlist)), x=zlist)
     W_chi = np.zeros_like(chi)
     for i in range(len(zlist) - 1):
         if fKchi[i] > 0:
-            W_chi[i] = simpson(weight_function_x(chi[i:], chi[i], zlist[i], p) * nsz[i:], x=zlist[i:])
+            W_chi[i] = np.sum(w[i:] * weight_function_x(chi[i:], chi[i], zlist[i], p) * nsz[i:])
     W_chi = (W_chi / (fKchi + 1e-20))**2
 
     if modified:
