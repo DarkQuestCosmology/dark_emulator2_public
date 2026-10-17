@@ -119,16 +119,17 @@ class DarkEmulator2:
         assert np.all(zred <= 5), "Input redshift is too large, specify z<5. Have you entered klist in zred by mistake?"
 
         scalar_input = False
-        reverse_zred = False
+        order = None
         if zred.ndim == 0:
             zred = zred[np.newaxis]
             scalar_input = True
 
         if not scalar_input and zred.size > 1:
-            if np.diff(zred)[0] < 0:
-                zred = np.sort(zred)
-                reverse_zred = True
-        return zred, scalar_input, reverse_zred
+            if np.any(np.diff(zred) < 0):
+                sort_idx = np.argsort(zred, kind="stable")
+                zred = zred[sort_idx]
+                order = np.argsort(sort_idx)
+        return zred, scalar_input, order
 
     ### for amplitude parameter ###
 
@@ -152,11 +153,12 @@ class DarkEmulator2:
             Computed sigma8.
         """
 
-        self.param.clear_sigma8(param)
+        p = dict(param)
+        self.param.clear_sigma8(p)
         if method == "emulator":
-            sig8 = self.lin_pk_emu.get_sigma8(param)
+            sig8 = self.lin_pk_emu.get_sigma8(p)
         elif method == "class":
-            sig8 = self.lin_pk_emu.get_class_sigma8(param)
+            sig8 = self.lin_pk_emu.get_class_sigma8(p)
 
         # overwrite sigma8 of input parameter
         param["sigma8"] = sig8
@@ -181,6 +183,8 @@ class DarkEmulator2:
             p["sigma8"] = p["S8"] / np.sqrt(p["Omega_m"] / 0.3)
             self.param.clear_As(p)
             self.param.clear_lnAs(p)
+        elif self.param.def_key_val(p, "ln(10^10As)"):
+            self.param.clear_As(p)
 
         if self.param.check_key_val_num(p, ["Omega_m", "h0", "omega_b", "omega_cdm"]) > 3:
             self.param.clear_omega_cdm(p)
@@ -215,6 +219,7 @@ class DarkEmulator2:
 
         assert param["sigma8"] is not None
         self.param.clear_As(param)
+        self.param.clear_lnAs(param)
         As = self.lin_pk_emu.get_As(param)
         # overwrite As of input parameter
         param["As"] = As
@@ -272,7 +277,7 @@ class DarkEmulator2:
             Linear power spectrum P(k) [(Mpc/h)^3].
         """
 
-        zred, scalar_input, reverse_zred = self.__sorting_zred(zred)
+        zred, scalar_input, order = self.__sorting_zred(zred)
         if method == "emulator":
             lin_pk = self.lin_pk_emu.get_lin_pk(param, zred, pk_type)
             k = self.lin_pk_emu.klist
@@ -282,7 +287,7 @@ class DarkEmulator2:
 
         if klist is not None:
             lin_pk = np.array([ius(np.log(k), _pk)(np.log(klist)) for _pk in lin_pk])
-            k = klist
+            k = np.asarray(klist)
 
         # Linear pk has no shot noise but is for extensions up to k>100.
         if self.reduce_shotnoise:
@@ -294,9 +299,8 @@ class DarkEmulator2:
         if scalar_input:
             lin_pk = np.squeeze(lin_pk)
 
-        if reverse_zred:
-            # Here, not scalar_input and reversing axis=1
-            lin_pk = lin_pk[::-1]
+        if order is not None:
+            lin_pk = lin_pk[order]
 
         return k, lin_pk
 
@@ -341,19 +345,18 @@ class DarkEmulator2:
             Ratio P_total(k) / P_cb(k).
         """
 
-        zred, scalar_input, reverse_zred = self.__sorting_zred(zred)
+        zred, scalar_input, order = self.__sorting_zred(zred)
         k, lin_ratio = self.lin_pk_emu.get_ratio_of_cb_to_total(param, zred, method=method)
 
         if klist is not None:
             lin_ratio = np.array([ius(k, _ratio)(klist) for _ratio in lin_ratio])
-            k = klist
+            k = np.asarray(klist)
 
         if scalar_input:
             lin_ratio = np.squeeze(lin_ratio)
 
-        if reverse_zred:
-            # Here, not scalar_input and reversing axis=1
-            lin_ratio = lin_ratio[::-1]
+        if order is not None:
+            lin_ratio = lin_ratio[order]
 
         return k, lin_ratio
 
@@ -386,7 +389,7 @@ class DarkEmulator2:
             Non-linear power spectrum P(k) [(Mpc/h)^3].
         """
 
-        zred, scalar_input, reverse_zred = self.__sorting_zred(zred)
+        zred, scalar_input, order = self.__sorting_zred(zred)
         pk = self.pk_emu.get_pk(param, zred, method)
         k = self.pk_emu.klist
 
@@ -412,7 +415,7 @@ class DarkEmulator2:
 
         if klist is not None:
             pk = np.array([ius(np.log(k), _pk)(np.log(klist)) for _pk in pk])
-            k = klist
+            k = np.asarray(klist)
 
         if self.reduce_shotnoise:
             pk = self.pk_emu.reduce_shotnoise(pk, k, self.reduce_shotnoise_method)
@@ -422,9 +425,8 @@ class DarkEmulator2:
         if scalar_input:
             pk = np.squeeze(pk)
 
-        if reverse_zred:
-            # Here, not scalar_input and reversing axis=1
-            pk = pk[::-1]
+        if order is not None:
+            pk = pk[order]
 
         return k, pk
 
@@ -478,7 +480,10 @@ class DarkEmulator2:
 
         rshot_flag = self.reduce_shotnoise
         self.reduce_shotnoise = True
-        k, lin_pk = self.get_lin_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
+        try:
+            k, lin_pk = self.get_lin_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
+        finally:
+            self.reduce_shotnoise = rshot_flag
         if lin_pk.ndim > 1:
             xi = [[] for _ in range(len(lin_pk))]
             for i in range(len(lin_pk)):
@@ -486,7 +491,6 @@ class DarkEmulator2:
         else:
             r, xi = dv.pk2xi(k, lin_pk, N_extrap_low=N_extrap_low, N_extrap_high=N_extrap_high)
 
-        self.reduce_shotnoise = rshot_flag
         return r, np.array(xi)
 
     def get_xi(self, param, zred=0.0, method="emulator", pk_type="total"):
@@ -521,7 +525,10 @@ class DarkEmulator2:
 
         rshot_flag = self.reduce_shotnoise
         self.reduce_shotnoise = True
-        k, pk = self.get_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
+        try:
+            k, pk = self.get_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
+        finally:
+            self.reduce_shotnoise = rshot_flag
         if pk.ndim > 1:
             xi = [[] for _ in range(len(pk))]
             for i in range(len(pk)):
@@ -529,7 +536,6 @@ class DarkEmulator2:
         else:
             r, xi = dv.pk2xi(k, pk, N_extrap_low=N_extrap_low, N_extrap_high=N_extrap_high)
 
-        self.reduce_shotnoise = rshot_flag
         return r, np.array(xi)
 
     ### for cosmic shear ###
@@ -583,9 +589,11 @@ class DarkEmulator2:
             else:
                 print(f"src_dist=shape{np.shape(src_dist)} (normalized)")
 
-        _k, _pk = self.get_lin_pk(param, klist=klist, zred=zlist, method=method, pk_type=pk_type)
+        try:
+            _k, _pk = self.get_lin_pk(param, klist=klist, zred=zlist, method=method, pk_type=pk_type)
+        finally:
+            self.reduce_shotnoise = rshot_flag
         l, cl = dv.pk2cl_limber_src_dist(param, pk=_pk, klist=_k, zlist=zlist, llist=llist, nsz=src_dist, modified=True)
-        self.reduce_shotnoise = rshot_flag
         return l, cl
 
     def get_cl_limber(self, param,
@@ -637,9 +645,11 @@ class DarkEmulator2:
             else:
                 print(f"src_dist=shape{np.shape(src_dist)} (normalized)")
 
-        _k, _pk = self.get_pk(param, klist=klist, zred=zlist, method=method, pk_type=pk_type)
+        try:
+            _k, _pk = self.get_pk(param, klist=klist, zred=zlist, method=method, pk_type=pk_type)
+        finally:
+            self.reduce_shotnoise = rshot_flag
         l, cl = dv.pk2cl_limber_src_dist(param, pk=_pk, klist=_k, zlist=zlist, llist=llist, nsz=src_dist, modified=True)
-        self.reduce_shotnoise = rshot_flag
         return l, cl
 
     ### for utils ###
@@ -685,8 +695,11 @@ class DarkEmulator2:
 
     def get_pk_cb_noiselist(self, param, zred=0.0, klist=None, method="emulator", noise_list=None):
         # for validation
-        zred, scalar_input, reverse_zred = self.__sorting_zred(zred)
-        pk = self.pk_emu.get_pk(param, zred, method, noise_list)
+        zred, scalar_input, order = self.__sorting_zred(zred)
+        if noise_list is None:
+            pk = self.pk_emu.get_pk(param, zred, method)
+        else:
+            pk = self.pk_emu.get_pk(param, zred, method, noise_list)
         k = self.pk_emu.klist
 
         if self.lin_pk_switch:
@@ -705,12 +718,11 @@ class DarkEmulator2:
 
         if klist is not None:
             pk = np.array([ius(np.log(k), _pk)(np.log(klist)) for _pk in pk])
-            k = klist
+            k = np.asarray(klist)
 
         if scalar_input:
             pk = np.squeeze(pk)
 
-        if reverse_zred:
-            # Here, not scalar_input and reversing axis=1
-            pk = pk[::-1]
+        if order is not None:
+            pk = pk[order]
         return k, pk

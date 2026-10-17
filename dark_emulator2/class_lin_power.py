@@ -131,6 +131,7 @@ def prepare_cosmo(cparam, gauge='nbody'):
 
     if cparam['sigma8'] is not None:
         As = cparam['As'] * (cparam['sigma8'] / sig8)**2
+        sig8 = cparam['sigma8']
     else:
         As = cparam['As']
 

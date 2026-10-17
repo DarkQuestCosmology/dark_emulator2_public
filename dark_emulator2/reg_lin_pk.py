@@ -1,4 +1,3 @@
-import sys
 import torch
 import pickle
 import pathlib
@@ -94,8 +93,7 @@ class LinPkEmulator():
                             param["ns"], param["Mnu"], param["Omega_k"],
                             param["w0"], param["wa"], param["h0"]])
         else:
-            print("Undefined amplitude parameter key ; sigma8 or As or ln(10^10As)")
-            sys.exit(1)
+            raise ValueError("Undefined amplitude parameter key ; sigma8 or As or ln(10^10As)")
 
         input_param = torch.tensor(input_param, dtype=torch.float32)
         input_param = input_param.to(self.device)
@@ -228,14 +226,15 @@ class LinPkEmulator():
             param (array): cosmological parameters for class
         """
 
+        param = dict(param)
         # amplitude parameter
-        if "sigma8" in param.keys():
+        if "sigma8" in param.keys() and param["sigma8"] is not None:
             # temporary value
             param['ln(10^10As)'] = 3.094
             param['As'] = np.exp(param['ln(10^10As)']) * 1e-10
         else:
             param['sigma8'] = None
-            if "ln(10^10As)" in param.keys():
+            if "ln(10^10As)" in param.keys() and param["ln(10^10As)"] is not None:
                 param['As'] = np.exp(param['ln(10^10As)']) * 1e-10
             else:
                 param['ln(10^10As)'] = np.log(param['As'] * 1e10)

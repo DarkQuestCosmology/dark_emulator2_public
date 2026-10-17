@@ -549,7 +549,7 @@ class Parameters:
         header = ut.read_header_label(param_file)
         param_dtype = np.dtype({'names': header, 'formats': (np.float64,) * len(header)})
         p = np.loadtxt(param_file, dtype=param_dtype)
-        p = ut.sarray_to_dict(p)
+        p = ut.sarray_to_dict(np.atleast_1d(p))[0]
         return p
 
     def __de2_om_sig8_support_params(self):
@@ -1194,6 +1194,8 @@ class Parameters:
 
             lo = max(lo_list)
             hi = min(hi_list)
+            if lo > hi:
+                raise ValueError(f"No overlap between presets '{name1}' and '{name2}' for '{k}'.")
             out[k] = [lo, hi]
 
         return out
