@@ -3,6 +3,7 @@ Automatic Differentiation
 
 ``dark_emulator2.autodiff`` returns the same outputs as ``DarkEmulator2`` (emulator method) as PyTorch tensors or JAX arrays,
 differentiable with respect to the cosmological parameters.
+The device (CPU or GPU) and the floating point type are set when an instance is created (``device`` and ``dtype``).
 See the notebooks ``08a_autodiff_torch.ipynb`` and ``08b_autodiff_jax.ipynb`` for examples.
 
 .. currentmodule:: dark_emulator2.autodiff

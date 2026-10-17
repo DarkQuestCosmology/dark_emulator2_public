@@ -4,6 +4,7 @@ Dark Emulator2 documentation
 DarkEmulator2 is a public emulator for rapid evaluation of linear and nonlinear matter power spectra, developed within the `Dark Quest Project <https://darkquestcosmology.github.io/>`_.
 
 The ``dark_emulator2`` Python package is calibrated on the Dark Quest II (DQ2) simulation suite and covers a nine-dimensional extended cosmology space including curvature, massive neutrinos, and dynamical dark energy.
+Differentiable PyTorch and JAX versions (:doc:`api/autodiff`), which also run on GPUs, are available for gradient-based inference such as Hamiltonian Monte Carlo.
 
 Project links
 -------------
@@ -17,19 +18,25 @@ Project links
 Installation
 ------------
 
-Install from PyPI::
+Install from PyPI:
 
-	pip install dark_emulator2
+.. code-block:: console
 
-Install directly from GitHub::
+   pip install dark_emulator2
 
-	pip install git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git
+Install directly from GitHub:
 
-For source or development installation::
+.. code-block:: console
 
-	git clone https://github.com/DarkQuestCosmology/dark_emulator2_public.git
-	cd dark_emulator2_public
-	pip install .
+   pip install git+https://github.com/DarkQuestCosmology/dark_emulator2_public.git
+
+For source or development installation:
+
+.. code-block:: console
+
+   git clone https://github.com/DarkQuestCosmology/dark_emulator2_public.git
+   cd dark_emulator2_public
+   pip install .
 
 Related projects
 ----------------

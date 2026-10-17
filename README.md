@@ -34,11 +34,11 @@ param = de.param.get_fid_param()
 k, pk = de.get_pk(param, zred=0.0)
 ```
 
-An automatic differentiation interface for PyTorch and JAX is also available in `dark_emulator2.autodiff`; see the notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
+Differentiable versions for PyTorch and JAX, which can also run on GPUs, are available in `dark_emulator2.autodiff`; see the notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
 
 ## Examples
 
-Example notebooks are available in [notebook](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook).
+Example notebooks are available in [notebook](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook); `00_overview.ipynb` lists them.
 
 ## Documentation
 
@@ -48,12 +48,9 @@ API reference is available at [readthedocs](https://dark-emulator2.readthedocs.i
 
 - Dark Emulator2 paper: [arXiv:2605.28596](https://doi.org/10.48550/arXiv.2605.28596)
 - GINKAKU code paper: [arXiv:2605.28581](https://doi.org/10.48550/arXiv.2605.28581)
-
 - Dark Quest project: [darkquestcosmology.github.io](https://darkquestcosmology.github.io/)
 - Previous Dark Emulator release: [DarkQuestCosmology/dark_emulator_public](https://github.com/DarkQuestCosmology/dark_emulator_public)
-
 - Supplementary emulator comparisons: https://darkquestcosmology.github.io/dark_emulator2_supplement/
-
 
 ## License
 
