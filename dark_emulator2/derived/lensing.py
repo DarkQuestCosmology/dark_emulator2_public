@@ -281,8 +281,8 @@ def pk2cl_limber(p, pk, klist, zlist, llist, modified=True):
 
     h = p["h0"]
 
-    _klist = klist / h  # [h/Mpc] to [1/Mpc]
-    _pk = pk * h**3  # [(Mpc/h)^3] to [(Mpc)^3]
+    _klist = klist * h  # [h/Mpc] to [1/Mpc]
+    _pk = pk / h**3  # [(Mpc/h)^3] to [(Mpc)^3]
 
     chi = comoving_distance(zlist, p)  # [Mpc]
     fKchi = proper_distance(zlist, p)  # [Mpc]
@@ -350,8 +350,8 @@ def pk2cl_limber_src_dist(p, pk, klist, zlist, llist, nsz=None, modified=True):
 
     h = p["h0"]
 
-    _klist = klist / h  # [h/Mpc] to [1/Mpc]
-    _pk = pk * h**3  # [(Mpc/h)^3] to [(Mpc)^3]
+    _klist = klist * h  # [h/Mpc] to [1/Mpc]
+    _pk = pk / h**3  # [(Mpc/h)^3] to [(Mpc)^3]
 
     chi = comoving_distance(zlist, p)  # [Mpc]
     fKchi = proper_distance(zlist, p)  # [Mpc]
