@@ -3,21 +3,22 @@ import jax.numpy as jnp
 import torch
 
 from .. import reg_lin_pk as rlp
+from ..network import load_net
 from ._core import _Emulator
 
 
 def _load_mlp(path, dtype, device):
-    # the networks are plain MLPs: rebuild them in JAX from the TorchScript weights
-    net = torch.jit.load(path, map_location="cpu")
+    # the networks are plain MLPs: rebuild them in JAX from the torch weights
+    net = load_net(path)[0]
     sd = net.state_dict()
     layers, act = [], None
     for name, m in net.seq_fc.named_children():
-        if m.original_name == "Linear":
+        if isinstance(m, torch.nn.Linear):
             layers.append(jax.device_put((jnp.asarray(sd[f"seq_fc.{name}.weight"].numpy().T, dtype=dtype),
                                           jnp.asarray(sd[f"seq_fc.{name}.bias"].numpy(), dtype=dtype)), device))
-        elif m.original_name == "GELU":
-            act = lambda x, tanh="tanh" in m.code: jax.nn.gelu(x, approximate=tanh)
-        elif m.original_name == "ELU":
+        elif isinstance(m, torch.nn.GELU):
+            act = lambda x, tanh=m.approximate == "tanh": jax.nn.gelu(x, approximate=tanh)
+        elif isinstance(m, torch.nn.ELU):
             act = jax.nn.elu
 
     def mlp(x):

@@ -1,10 +1,10 @@
 import torch
-import pickle
 import pathlib
 import numpy as np
 
 from . import class_lin_power as clp
 from . import utils as ut
+from .network import load_net
 
 _dir = str(pathlib.Path(__file__).parent) + "/"
 
@@ -58,7 +58,7 @@ class LinPkEmulator():
         self.fid_lin_pk_cb_spl = ut.create_interp2d(fid_lin_pk[0], zlist, fid_lin_pk[1:], method=interp_method)
 
     def load_torch(self, model_path):
-        """load_torch: Load torch script file.
+        """load_torch: Load torch network file.
 
         Args:
             model_path (str): Path of model.
@@ -70,10 +70,8 @@ class LinPkEmulator():
 
         self.device = 'cpu'
 
-        ef = {"attr": ''}
-        net = torch.jit.load(model_path, _extra_files=ef)
+        net, netargs = load_net(model_path)
         net.to(self.device)
-        netargs = pickle.loads(ef["attr"])
         return net, netargs
 
     def get_sigma8(self, param):

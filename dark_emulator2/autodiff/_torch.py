@@ -2,6 +2,7 @@ import torch
 import array_api_compat.torch as xp
 
 from .. import reg_lin_pk as rlp
+from ..network import load_net
 from ._core import _Emulator
 
 
@@ -30,10 +31,7 @@ class TorchEmulator(_Emulator):
             rlp.def_amp_torch, rlp.def_lin_pk_cb_torch, rlp.def_lin_ratio_torch, self.de.pk_emu.input_file))
 
     def _load(self, path):
-        net = torch.jit.load(path, map_location=self.device).to(self.dtype).eval()
-        for p in net.parameters():
-            p.requires_grad_(False)
-        return net.seq_fc
+        return load_net(path)[0].to(self.device, self.dtype).eval().seq_fc
 
     def _asarray(self, a):
         return torch.as_tensor(a, dtype=self.dtype, device=self.device)

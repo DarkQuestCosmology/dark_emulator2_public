@@ -1,10 +1,10 @@
 import pathlib
-import pickle
 import torch
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as ius
 from .reg_lin_pk import LinPkEmulator
 from . import utils as ut
+from .network import load_net
 
 _dir = str(pathlib.Path(__file__).parent) + "/"
 pk_torch_path = _dir + "data/torch/nlin_pk/"
@@ -104,7 +104,7 @@ class PkEmulator():
                                      str(pathlib.Path(noise_path, release, "calibration_std_LR.dat"))]
 
     def load_torch(self, model_path):
-        """load_torch: Load torch script file.
+        """load_torch: Load torch network file.
 
         Args:
             model_path (str): Path of model.
@@ -116,10 +116,8 @@ class PkEmulator():
 
         self.device = 'cpu'
 
-        ef = {"attr": ''}
-        net = torch.jit.load(model_path, _extra_files=ef)
+        net, netargs = load_net(model_path)
         net.to(self.device)
-        netargs = pickle.loads(ef["attr"])
         return net, netargs
 
     def set_pk_param(self, param, method="emulator"):
