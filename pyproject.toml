@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dark_emulator2"
-version = "1.0.2"
+version = "1.1.0"
 authors = [
   { name = "Satoshi Tanaka" },
   { name = "Takahiro Nishimichi" },
