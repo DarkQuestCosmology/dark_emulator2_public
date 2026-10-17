@@ -6,3 +6,4 @@ API Reference
 
    api/dark_emulator2
    api/parameters
+   api/autodiff

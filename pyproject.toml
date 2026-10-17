@@ -35,6 +35,8 @@ dependencies = [
   "numpy",
   "scipy>=1.10",
   "torch",
+  "jax",
+  "array-api-compat",
   "frozendict",
   "classy>=3.0",
   "packaging",

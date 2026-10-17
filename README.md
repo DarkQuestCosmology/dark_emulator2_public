@@ -34,6 +34,8 @@ param = de.param.get_fid_param()
 k, pk = de.get_pk(param, zred=0.0)
 ```
 
+An automatic differentiation interface for PyTorch and JAX is also available in `dark_emulator2.autodiff`; see the notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
+
 ## Examples
 
 Example notebooks are available in [notebook](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook).
