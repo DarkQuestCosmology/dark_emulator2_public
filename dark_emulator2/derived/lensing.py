@@ -356,8 +356,10 @@ def pk2cl_limber_src_dist(p, pk, klist, zlist, llist, nsz=None, modified=True):
     chi = comoving_distance(zlist, p)  # [Mpc]
     fKchi = proper_distance(zlist, p)  # [Mpc]
 
-    chis = chi[-1]
-    W_chi = weight_function_x(chis, chi, zlist, p) * nsz
+    W_chi = np.zeros_like(chi)
+    for i in range(len(zlist) - 1):
+        if fKchi[i] > 0:
+            W_chi[i] = simpson(weight_function_x(chi[i:], chi[i], zlist[i], p) * nsz[i:], x=zlist[i:])
     W_chi = (W_chi / (fKchi + 1e-20))**2
 
     if modified:
