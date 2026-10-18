@@ -80,8 +80,6 @@ class DarkEmulator2:
     def output_verbose(self, flag=True):
         self.verbose = flag
         self.param.verbose = flag
-        self.lin_pk_emu.verbose = flag
-        self.pk_emu.verbose = flag
 
     @property
     def kny(self):
@@ -300,8 +298,6 @@ class DarkEmulator2:
         if self.reduce_shotnoise:
             reduce_method = self.reduce_shotnoise_method_grad
             lin_pk = self.pk_emu.reduce_shotnoise(lin_pk, k, reduce_method)
-            if self.verbose:
-                print("Remove shot noise artificially by extrapolation.")
 
         if scalar_input:
             lin_pk = np.squeeze(lin_pk)
@@ -426,8 +422,6 @@ class DarkEmulator2:
 
         if self.reduce_shotnoise:
             pk = self.pk_emu.reduce_shotnoise(pk, k, self.reduce_shotnoise_method)
-            if self.verbose:
-                print("Remove shot noise artificially by extrapolation.")
 
         if scalar_input:
             pk = np.squeeze(pk)

@@ -28,8 +28,6 @@ class PkEmulator():
         self.npart = npart  # npart is N^(1/3)
         self.boxsize = boxsize  # unit of [Mpc/h]
 
-        self.verbose = False
-
         if not debug:
             model = default_model
         else:

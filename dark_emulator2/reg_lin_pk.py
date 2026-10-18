@@ -25,8 +25,6 @@ class LinPkEmulator():
             amp_torch (str, optional): Path of amp torch. Defaults to amp_torch.
         """
 
-        self.verbose = False
-
         # Change to "cubic" when this bug is fixed.
         # <https://github.com/scipy/scipy/issues/18010>
         # interp_method = "cubic"
