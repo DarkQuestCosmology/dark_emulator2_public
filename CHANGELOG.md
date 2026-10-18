@@ -5,6 +5,7 @@
 - Add `dark_emulator2.autodiff`: `TorchEmulator` and `JaxEmulator` return the linear/nonlinear `P(k)`, `sigma8`/`ln(10^10As)` and Limber `C_ell` of `DarkEmulator2` (emulator method) as PyTorch tensors or JAX arrays, differentiable with respect to the cosmological parameters (e.g. for HMC with Pyro or NumPyro). Add `jax` and `array-api-compat` to the dependencies.
 - Add notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
 - Store the network weights as plain `state_dict` files read with `torch.load(weights_only=True)` (`dark_emulator2.network`) instead of TorchScript, which is deprecated in recent PyTorch; the weights and outputs are unchanged.
+- Ship only the data files read by the code (the parameter lists and unused fiducial spectra stay in the repository); the wheel shrinks from 68 MB to 64 MB.
 - Fix the inverted h-unit conversion of `k` and `P(k)` in `pk2cl_limber()` and `pk2cl_limber_src_dist()`, which affected all Limber `C_ell` outputs (`get_cl_limber()`, `get_lin_cl_limber()`).
 - Fix the source-averaged lensing kernel in `pk2cl_limber_src_dist()` used with `src_dist`.
 - Fix the divergence of `get_xi()` and `get_lin_xi()` when the `P(k)` tail is shallower than about `k^-2` (e.g. at high redshift).

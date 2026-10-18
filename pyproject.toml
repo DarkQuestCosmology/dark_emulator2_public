@@ -53,11 +53,9 @@ include = ["dark_emulator2*"]
 
 [tool.setuptools.package-data]
 dark_emulator2 = [
-  "data/lin_pk/parameter_lists.txt",
-  "data/lin_pk/fiducial/*.dat",
+  "data/lin_pk/fiducial/power_cb.dat",
+  "data/lin_pk/fiducial/power_tot.dat",
 
-  "data/nlin_pk/parameter_lists.txt",
-  "data/nlin_pk/fiducial/*.dat",
   "data/nlin_pk/noise/*.dat",
   "data/nlin_pk/noise/release/*.dat",
 
