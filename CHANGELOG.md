@@ -2,8 +2,8 @@
 
 ## 1.1.0 - 2026-10-18
 
-- Add `dark_emulator2.autodiff` for automatic differentiation with PyTorch and JAX.
-- Add `jax` and `array-api-compat` to the dependencies.
+- Add automatic differentiation with PyTorch and JAX: `DarkEmulator2(autodiff="torch")` or `autodiff="jax"`.
+- Add `jax` and `array-api-compat` to the dependencies, and the `gpu` extra for JAX on GPUs.
 - Fix the h-unit conversion and the `src_dist` kernel in the Limber `C_ell`.
 - Fix the divergence of `get_xi()` at high redshift.
 - Fix the output order for unsorted `zred` and the handling of `As` / `ln(10^10As)`.

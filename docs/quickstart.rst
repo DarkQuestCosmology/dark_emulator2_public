@@ -43,15 +43,14 @@ Correlation function and lensing power spectrum
 Automatic differentiation
 -------------------------
 
-``dark_emulator2.autodiff`` returns the same quantities as PyTorch tensors or JAX arrays, differentiable with respect to the parameters (see :doc:`api/autodiff`).
-The device and the floating point type are set when the instance is created.
+With ``autodiff="torch"`` or ``autodiff="jax"``, the power spectra and ``C_ell`` are returned as PyTorch tensors or JAX arrays,
+differentiable with respect to the parameters (see :doc:`api/autodiff`).
 
 .. code-block:: python
 
    import torch
-   from dark_emulator2.autodiff import TorchEmulator
 
-   emu = TorchEmulator(de, device="cuda", dtype=torch.float64)  # or device="cpu"
+   emu = DarkEmulator2(autodiff="torch", device="cuda", dtype=torch.float64)  # or device="cpu"
    sigma8 = torch.tensor(0.831, dtype=torch.float64, requires_grad=True)
    k, pk = emu.get_pk({**param, "sigma8": sigma8}, zred=0.0)
    pk.sum().backward()  # d(sum P) / d sigma8 in sigma8.grad

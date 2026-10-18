@@ -17,7 +17,7 @@ class TorchEmulator(_Emulator):
     de : DarkEmulator2, optional
         Emulator whose settings and tables are used (created if None).
     device : str or torch.device, optional
-        Device of the networks and outputs (default: "cpu").
+        "cpu" (default), "cuda" or "cuda:N".
     dtype : torch.dtype, optional
         Floating point type (default: torch.get_default_dtype()).
     """

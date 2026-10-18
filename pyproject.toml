@@ -42,6 +42,9 @@ dependencies = [
   "packaging",
 ]
 
+[project.optional-dependencies]
+gpu = ["jax[cuda13]"]
+
 [project.urls]
 Project = "https://darkquestcosmology.github.io/"
 Documentation = "https://dark-emulator2.readthedocs.io/"

@@ -14,7 +14,7 @@ from . import derived as dv
 
 class DarkEmulator2:
     def __init__(self, npart=3000, lbox=1000,
-                 verbose=False, debug=False):
+                 verbose=False, debug=False, autodiff=False, device=None, dtype=None):
         """
         DarkEmulator2 class
 
@@ -32,6 +32,15 @@ class DarkEmulator2:
             Box size in [Mpc/h] (default: 1000).
         verbose : bool, optional
             Verbose mode (default: False).
+        autodiff : {False, "torch", "jax"}, optional
+            Return PyTorch tensors or JAX arrays differentiable with respect to the parameters
+            from get_pk, get_lin_pk (and their aliases), get_cl_limber, get_lin_cl_limber,
+            get_sigma8 and get_lnAs with method="emulator"; get_sigma8 and get_lnAs then do not
+            modify the input dictionary. Other methods return numpy arrays (default: False).
+        device : str, optional
+            Device with autodiff: "cpu" (default), "cuda" or "cuda:N".
+        dtype : optional
+            Floating point type with autodiff (default: the default of PyTorch or JAX).
         """
 
         self.__version__ = __version__
@@ -56,6 +65,14 @@ class DarkEmulator2:
         self.output_verbose(verbose)
         self.show_version(verbose)
         self.show_mode(verbose)
+
+        self.ad_emu = None
+        if autodiff:
+            from . import autodiff as ad
+            assert autodiff in ("torch", "jax"), "autodiff must be 'torch' or 'jax'"
+            self.ad_emu = (ad.TorchEmulator if autodiff == "torch" else ad.JaxEmulator)(self, device, dtype)
+        else:
+            assert device is None and dtype is None, "device and dtype are used only with autodiff"
 
     def show_version(self, flag=True):
         if flag:
@@ -158,6 +175,9 @@ class DarkEmulator2:
             Computed sigma8.
         """
 
+        if self.ad_emu is not None and method == "emulator":
+            return self.ad_emu.get_sigma8(param)
+
         p = dict(param)
         self.param.clear_sigma8(p)
         if method == "emulator":
@@ -196,6 +216,7 @@ class DarkEmulator2:
         if self.param.check_key_val_num(p, ["Omega_k", "Omega_de"]) > 1:
             self.param.clear_Omega_de(p)
 
+        ad_emu, self.ad_emu = self.ad_emu, None
         try:
             p = self.param.set_param(p, strict=True)
             if not self.param.def_key_val(p, "sigma8"):
@@ -203,6 +224,8 @@ class DarkEmulator2:
             return self.param._is_in_Om_sig8_support(p)
         except (AssertionError, KeyError, ValueError):
             return False
+        finally:
+            self.ad_emu = ad_emu
 
     def get_As(self, param):
         """
@@ -248,6 +271,9 @@ class DarkEmulator2:
             Computed ln(10^10 As).
         """
 
+        if self.ad_emu is not None:
+            return self.ad_emu.get_lnAs(param)
+
         # Here, "lnAs" is "ln(10^10As)"
         assert param["sigma8"] is not None
         self.param.clear_As(param)
@@ -281,6 +307,9 @@ class DarkEmulator2:
         Pk : array
             Linear power spectrum P(k) [(Mpc/h)^3].
         """
+
+        if self.ad_emu is not None and method == "emulator":
+            return self.ad_emu.get_lin_pk(param, zred=zred, klist=klist, pk_type=pk_type)
 
         zred, scalar_input, order = self.__sorting_zred(zred)
         if method == "emulator":
@@ -392,6 +421,9 @@ class DarkEmulator2:
             Non-linear power spectrum P(k) [(Mpc/h)^3].
         """
 
+        if self.ad_emu is not None and method == "emulator":
+            return self.ad_emu.get_pk(param, zred=zred, klist=klist, pk_type=pk_type)
+
         zred, scalar_input, order = self.__sorting_zred(zred)
         pk = self.pk_emu.get_pk(param, zred, method)
         k = self.pk_emu.klist
@@ -479,12 +511,12 @@ class DarkEmulator2:
         N_extrap_low = 0
         N_extrap_high = 10000
 
-        rshot_flag = self.reduce_shotnoise
-        self.reduce_shotnoise = True
+        rshot_flag, ad_emu = self.reduce_shotnoise, self.ad_emu
+        self.reduce_shotnoise, self.ad_emu = True, None
         try:
             k, lin_pk = self.get_lin_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
         finally:
-            self.reduce_shotnoise = rshot_flag
+            self.reduce_shotnoise, self.ad_emu = rshot_flag, ad_emu
         lin_pk = self.__taper_shallow_tail(k, lin_pk)
         if lin_pk.ndim > 1:
             xi = [[] for _ in range(len(lin_pk))]
@@ -525,12 +557,12 @@ class DarkEmulator2:
         N_extrap_low = 0
         N_extrap_high = 10000
 
-        rshot_flag = self.reduce_shotnoise
-        self.reduce_shotnoise = True
+        rshot_flag, ad_emu = self.reduce_shotnoise, self.ad_emu
+        self.reduce_shotnoise, self.ad_emu = True, None
         try:
             k, pk = self.get_pk(param, zred=zred, klist=klist, method=method, pk_type=pk_type)
         finally:
-            self.reduce_shotnoise = rshot_flag
+            self.reduce_shotnoise, self.ad_emu = rshot_flag, ad_emu
         pk = self.__taper_shallow_tail(k, pk)
         if pk.ndim > 1:
             xi = [[] for _ in range(len(pk))]
@@ -573,6 +605,9 @@ class DarkEmulator2:
         Cl : array
             Angular power spectrum C(l).
         """
+
+        if self.ad_emu is not None and method == "emulator":
+            return self.ad_emu.get_lin_cl_limber(param, zlist=zlist, klist=klist, llist=llist, pk_type=pk_type, src_dist=src_dist)
 
         assert not np.isscalar(zlist)
         if src_dist is not None:
@@ -632,6 +667,9 @@ class DarkEmulator2:
         Cl : array
             Angular power spectrum C(l).
         """
+
+        if self.ad_emu is not None and method == "emulator":
+            return self.ad_emu.get_cl_limber(param, zlist=zlist, klist=klist, llist=llist, pk_type=pk_type, src_dist=src_dist)
 
         assert not np.isscalar(zlist)
         rshot_flag = self.reduce_shotnoise
@@ -706,7 +744,11 @@ class DarkEmulator2:
         k = self.pk_emu.klist
 
         if self.lin_pk_switch:
-            _, lin_pk = self.get_lin_pk_cb(param, klist=k, zred=np.squeeze(zred), method=method)
+            ad_emu, self.ad_emu = self.ad_emu, None
+            try:
+                _, lin_pk = self.get_lin_pk_cb(param, klist=k, zred=np.squeeze(zred), method=method)
+            finally:
+                self.ad_emu = ad_emu
             kidx = np.abs(k - self.lin_pk_switch_k).argmin()
             w = np.linspace(0.0, 1.0, self.nsmooth, endpoint=False)
 

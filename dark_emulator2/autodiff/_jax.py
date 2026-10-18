@@ -42,8 +42,8 @@ class JaxEmulator(_Emulator):
     ----------
     de : DarkEmulator2, optional
         Emulator whose settings and tables are used (created if None).
-    device : jax.Device, optional
-        Device of the weights and tables (default: jax.devices()[0]).
+    device : str or jax.Device, optional
+        "cpu" (default), "cuda" or "cuda:N".
     dtype : dtype, optional
         Floating point type (default: float64 if jax_enable_x64 is set, otherwise float32).
     """
@@ -51,7 +51,10 @@ class JaxEmulator(_Emulator):
     def __init__(self, de=None, device=None, dtype=None):
         super().__init__(de)
         self.xp = jnp
-        self.device = jax.devices()[0] if device is None else device
+        if device is None or isinstance(device, str):
+            platform, _, index = (device or "cpu").partition(":")
+            device = jax.devices(platform)[int(index or 0)]
+        self.device = device
         self.dtype = jnp.result_type(float) if dtype is None else dtype
         self._amp, self._lin, self._ratio, self._nlin = (_load_mlp(path, self.dtype, self.device) for path in (
             rlp.def_amp_torch, rlp.def_lin_pk_cb_torch, rlp.def_lin_ratio_torch, self.de.pk_emu.input_file))

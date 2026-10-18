@@ -24,6 +24,12 @@ cd dark_emulator2_public
 pip install .
 ```
 
+For JAX on NVIDIA GPUs (the PyTorch wheels on PyPI already support them on Linux):
+
+```console
+pip install "dark_emulator2[gpu]"
+```
+
 ## Usage
 
 ```python
@@ -34,7 +40,7 @@ param = de.param.get_fid_param()
 k, pk = de.get_pk(param, zred=0.0)
 ```
 
-Differentiable versions for PyTorch and JAX, which can also run on GPUs, are available in `dark_emulator2.autodiff`; see the notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
+Automatic differentiation with PyTorch or JAX, also on GPUs: `DarkEmulator2(autodiff="torch", device="cuda")`; see the notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
 
 ## Examples
 
