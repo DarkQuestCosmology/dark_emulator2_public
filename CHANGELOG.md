@@ -2,19 +2,12 @@
 
 ## 1.1.0 - 2026-10-18
 
-- Add `dark_emulator2.autodiff`: `TorchEmulator` and `JaxEmulator` return the linear/nonlinear `P(k)`, `sigma8`/`ln(10^10As)` and Limber `C_ell` of `DarkEmulator2` (emulator method) as PyTorch tensors or JAX arrays, differentiable with respect to the cosmological parameters (e.g. for HMC with Pyro or NumPyro). Add `jax` and `array-api-compat` to the dependencies.
-- Add notebooks `08a_autodiff_torch.ipynb` and `08b_autodiff_jax.ipynb`.
-- Store the network weights as plain `state_dict` files read with `torch.load(weights_only=True)` (`dark_emulator2.network`) instead of TorchScript, which is deprecated in recent PyTorch; the weights and outputs are unchanged.
-- Ship only the data files read by the code (the parameter lists and unused fiducial spectra stay in the repository); the wheel shrinks from 68 MB to 64 MB.
-- Fix the inverted h-unit conversion of `k` and `P(k)` in `pk2cl_limber()` and `pk2cl_limber_src_dist()`, which affected all Limber `C_ell` outputs (`get_cl_limber()`, `get_lin_cl_limber()`).
-- Fix the source-averaged lensing kernel in `pk2cl_limber_src_dist()` used with `src_dist`.
-- Fix the divergence of `get_xi()` and `get_lin_xi()` when the `P(k)` tail is shallower than about `k^-2` (e.g. at high redshift).
-- Fix the arguments passed to FFTLog in `fftlog.py`; `xi(r)` now has 600 points starting at `r = 1.02e-3`.
-- Use `Omega_de = 1 - Omega_m - Omega_k` in `comoving_distance()`.
-- Fix the handling of `As` and `ln(10^10As)` in `method="class"`, `get_As()`, `get_sigma8()` and `is_in_support()`; `get_sigma8()` raises `ValueError` instead of exiting.
-- Return outputs in the input order for non-monotonic `zred`, and restore `reduce_shotnoise` when a call inside `get_xi()` or `get_*cl_limber()` fails.
-- Minor fixes in the shot-noise extrapolation, `tophat_nsz()`, `set_params_from_file_to_dict()` and `get_preset_range_dict_pair()`.
-- Rerun notebooks `03a`, `03b`, `06b`, `07a` and `07b` with these fixes; tidy notebooks `00`-`04` and expand the quickstart page of the documentation.
+- Add `dark_emulator2.autodiff` for automatic differentiation with PyTorch and JAX.
+- Add `jax` and `array-api-compat` to the dependencies.
+- Fix the h-unit conversion and the `src_dist` kernel in the Limber `C_ell`.
+- Fix the divergence of `get_xi()` at high redshift.
+- Fix the output order for unsorted `zred` and the handling of `As` / `ln(10^10As)`.
+- Store the network weights as `state_dict` instead of TorchScript.
 
 ## 1.0.2 - 2026-09-24
 
