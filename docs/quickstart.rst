@@ -50,9 +50,14 @@ differentiable with respect to the parameters (see :doc:`api/autodiff`).
 
    import torch
 
-   emu = DarkEmulator2(autodiff="torch", device="cuda", dtype=torch.float64)  # or device="cpu"
-   sigma8 = torch.tensor(0.831, dtype=torch.float64, requires_grad=True)
+   device = "cuda" if torch.cuda.is_available() else "cpu"
+   emu = DarkEmulator2(autodiff="torch", device=device, dtype=torch.float64)
+   sigma8 = torch.tensor(0.831, dtype=torch.float64, device=device, requires_grad=True)
    k, pk = emu.get_pk({**param, "sigma8": sigma8}, zred=0.0)
    pk.sum().backward()  # d(sum P) / d sigma8 in sigma8.grad
+
+Pass the parameter tensors directly to the emulator. Use ``emu.param.set_param()`` for ordinary numerical preparation,
+before creating the differentiable inputs; do not call it inside the function being differentiated.
+To use ``As`` or ``ln(10^10As)`` as the free amplitude, remove the other amplitude entries first (see :doc:`api/autodiff`).
 
 More examples are in the `notebooks <https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook>`_.

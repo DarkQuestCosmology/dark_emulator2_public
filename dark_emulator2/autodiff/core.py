@@ -131,12 +131,14 @@ class _Emulator:
             pk = pk @ c["out_T"]
         if reduce_method:
             k = self.de.lin_pk_emu.klist if klist is None else klist
-            pk = self._reduce(pk, self._consts(("reduce", _key(k), reduce_method["type"]), lambda: su.reduce_consts(k, reduce_method)))
+            key = ("reduce", _key(k), tuple(sorted(reduce_method.items())))
+            pk = self._reduce(pk, self._consts(key, lambda: su.reduce_consts(k, reduce_method)))
         return pk
 
     def _pk(self, t, z, klist, pk_type, reduce_method):
         xp = self.xp
-        c = self._consts(("nlin", z.tobytes(), _key(klist)), lambda: su.nlin_consts(self.de, z, klist))
+        key = ("nlin", z.tobytes(), _key(klist), self.de.lin_pk_switch, self.de.lin_pk_switch_k, self.de.nsmooth)
+        c = self._consts(key, lambda: su.nlin_consts(self.de, z, klist))
         zz = self._asarray(z)
         x = self._lin_in(t, zz)
         lin = 10.0**self._lin(x) * c["fid_lin"]
@@ -161,7 +163,8 @@ class _Emulator:
             pk = pk @ c["out_T"]
         if reduce_method:
             k = self.de.pk_emu.klist if klist is None else klist
-            pk = self._reduce(pk, self._consts(("reduce", _key(k), reduce_method["type"]), lambda: su.reduce_consts(k, reduce_method)))
+            key = ("reduce", _key(k), tuple(sorted(reduce_method.items())))
+            pk = self._reduce(pk, self._consts(key, lambda: su.reduce_consts(k, reduce_method)))
         return pk
 
     def get_lin_pk(self, param, zred=0.0, klist=None, pk_type="cb"):
