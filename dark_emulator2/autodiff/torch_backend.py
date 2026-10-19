@@ -3,7 +3,7 @@ import array_api_compat.torch as xp
 
 from .. import reg_lin_pk as rlp
 from ..network import load_net
-from ._core import _Emulator
+from .core import _Emulator
 
 
 class TorchEmulator(_Emulator):

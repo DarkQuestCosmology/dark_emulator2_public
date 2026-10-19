@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import constants as const
-from . import _setup as su
+from . import setup as su
 
 _KEYS = ("Omega_m", "omega_b", "ns", "Mnu", "Omega_k", "w0", "wa", "h0")
 
