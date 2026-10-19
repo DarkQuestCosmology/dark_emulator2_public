@@ -46,6 +46,13 @@ Automatic differentiation with PyTorch or JAX, also on GPUs: `DarkEmulator2(auto
 
 Example notebooks are available in [notebook](https://github.com/DarkQuestCosmology/dark_emulator2_public/tree/main/notebook); `00_overview.ipynb` lists them.
 
+For the autodiff notebooks in a source checkout, install that checkout with `pip install .` from the repository root so that the code and examples use the same revision. Install the dependencies for your chosen notebook:
+
+```console
+pip install matplotlib pyro-ppl  # PyTorch notebook
+pip install matplotlib numpyro   # JAX notebook
+```
+
 ## Documentation
 
 API reference is available at [readthedocs](https://dark-emulator2.readthedocs.io/).
